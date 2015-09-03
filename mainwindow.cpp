@@ -140,8 +140,12 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
     connect(actHelp_, SIGNAL(triggered()), SLOT(onActHelp()));
     connect(actLiveChat_, SIGNAL(triggered()), SLOT(onLiveChat()));
     connect(actExit_, SIGNAL(triggered()), SLOT(onExit()));
+
+
+#if defined Q_OS_WIN
     connect(trayIcon_, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
             SLOT( onTrayActivated(QSystemTrayIcon::ActivationReason) ));
+#endif
 
     QSettings settings;
     if (settings.value("savePass", "true").toString() == "true")

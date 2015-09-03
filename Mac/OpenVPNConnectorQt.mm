@@ -28,17 +28,21 @@ OpenVPNConnectorQt *g_openVPNConnectorQt = NULL;
 }
 - (void)onError: (enum ERROR) error
 {
-    if (error == AUTH_ERROR)
+    if (error == MAC_AUTH_ERROR)
     {
         g_openVPNConnectorQt->error(AUTH_ERROR);
     }
-    else if (error == NO_OPENVPN_SOCKET)
+    else if (error == MAC_NO_OPENVPN_SOCKET)
     {
         g_openVPNConnectorQt->error(NO_OPENVPN_SOCKET);
     }
-    else if (error == CANNOT_ALLOCATE_TUN_TAP)
+    else if (error == MAC_CANNOT_ALLOCATE_TUN_TAP)
     {
         g_openVPNConnectorQt->error(CANNOT_ALLOCATE_TUN_TAP);
+    }
+    else if (error == MAC_PROXY_AUTH_ERROR)
+    {
+        g_openVPNConnectorQt->error(PROXY_AUTH_ERROR);
     }
 }
 - (void)onLog: (NSString *)logStr
@@ -87,6 +91,8 @@ void OpenVPNConnectorQt::connect(const QString &configPath, const QString &usern
     g_openVPNConnector.configPath = (__bridge NSString *)configPath.toCFString();
     g_openVPNConnector.username = (__bridge NSString *)username.toCFString();
     g_openVPNConnector.password = (__bridge NSString *)password.toCFString();
+    g_openVPNConnector.proxyUsername = (__bridge NSString *)proxyUsername.toCFString();
+    g_openVPNConnector.proxyPassword = (__bridge NSString *)proxyPassword.toCFString();
     [g_openVPNConnector connect];
 }
 

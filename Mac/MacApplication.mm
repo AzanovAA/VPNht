@@ -64,16 +64,16 @@ void MacApplication::Private::setupCocoaEventHandler() const
     // applicationShouldHandleReopen:hasVisibleWindows: method on
     // NSApplicationDelegate but this isn't possible without nasty runtime
     // reflection hacks until Qt is fixed. If this breaks, shout at them :)
-    [[NSAppleEventManager sharedAppleEventManager]
+    /*[[NSAppleEventManager sharedAppleEventManager]
      setEventHandler:dockIconClickEventHandler
      andSelector:@selector(handleDockClickEvent:withReplyEvent:)
      forEventClass:kCoreEventClass
-     andEventID:kAEReopenApplication];
+     andEventID:kAEReopenApplication];*/
 }
 
 void MacApplication::onSetupDockEventMonitor()
 {
-    m_private->setupCocoaEventHandler();
+    //m_private->setupCocoaEventHandler();
 }
 
 void MacApplication::onSetupNotificationCenter()

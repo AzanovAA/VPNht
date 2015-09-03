@@ -15,6 +15,12 @@ SettingsWindow::SettingsWindow(QMenu *settingsMenu, QWidget *parent)
 	: QWidget(parent)
 {
 	ui.setupUi(this);
+
+#if defined Q_OS_MAC
+
+
+#endif
+
     ui.btnSettings->setMenu( settingsMenu );
     connect(ui.pbSave, SIGNAL(clicked()), SLOT(onSave()));
 

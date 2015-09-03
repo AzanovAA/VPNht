@@ -9,7 +9,7 @@
 @protocol OpenVPNConnectorEvents
 
 // OpenVPN errors
-enum ERROR {MAC_AUTH_ERROR, MAC_NO_OPENVPN_SOCKET, MAC_CANNOT_ALLOCATE_TUN_TAP};
+enum ERROR {MAC_AUTH_ERROR, MAC_NO_OPENVPN_SOCKET, MAC_CANNOT_ALLOCATE_TUN_TAP, MAC_PROXY_AUTH_ERROR};
 
 enum CONNECTION_STATUS {STATUS_DISCONNECTED, STATUS_CONNECTING,  STATUS_CONNECTED};
 
@@ -31,6 +31,8 @@ enum CONNECTION_STATUS {STATUS_DISCONNECTED, STATUS_CONNECTING,  STATUS_CONNECTE
 @property NSString *configPath;    // path to *.ovpn file
 @property NSString *username;
 @property NSString *password;
+@property NSString *proxyUsername;
+@property NSString *proxyPassword;
 @property int       port;           // port for network exchange with openvpn process (default value 9544)
 
 - (void) setEventDelegate: (id <OpenVPNConnectorEvents> )delegate;

@@ -321,6 +321,7 @@ int sock_ = -1;
     int numberOfConnectRetries = 0;
     char server_reply[10000];
     bool bStateModeOn = false;
+    bool bProxyAuthErrorEmited = false;
     
     
     while (!bStopThread_)
@@ -395,6 +396,14 @@ int sock_ = -1;
                 sprintf((char *)message, "password \"Auth\" %s\n", [_password UTF8String]);
                 [self sendAll:(char *)message :strlen((char *)message)];
             }
+            else if ([strServerReply rangeOfString:@"PASSWORD:Need 'HTTP Proxy' username/password"].location != NSNotFound)
+            {
+                char *message[1024];
+                sprintf((char *)message, "username \"HTTP Proxy\" %s\n", [_proxyUsername UTF8String]);
+                [self sendAll:(char *)message :strlen((char *)message)];
+                sprintf((char *)message, "password \"HTTP Proxy\" %s\n", [_proxyPassword UTF8String]);
+                [self sendAll:(char *)message :strlen((char *)message)];
+            }
             else if ([strServerReply rangeOfString:@"PASSWORD:Verification Failed: 'Auth'"].location != NSNotFound)
             {
                 [eventDelegate_ onError: MAC_AUTH_ERROR];
@@ -402,6 +411,14 @@ int sock_ = -1;
             else if ([strServerReply rangeOfString:@"FATAL:Cannot allocate TUN/TAP dev dynamically"].location != NSNotFound)
             {
                 [eventDelegate_ onError: MAC_CANNOT_ALLOCATE_TUN_TAP];
+            }
+            else if ([strServerReply rangeOfString:@"Proxy requires authentication"].location != NSNotFound)
+            {
+                if (!bProxyAuthErrorEmited)
+                {
+                    [eventDelegate_ onError: MAC_PROXY_AUTH_ERROR];
+                    bProxyAuthErrorEmited = true;
+                }
             }
             else if ([strServerReply rangeOfString:@">BYTECOUNT:"].location != NSNotFound)
             {

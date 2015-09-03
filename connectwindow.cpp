@@ -27,6 +27,7 @@ ConnectWindow::ConnectWindow(QMenu *settingsMenu, QWidget *parent)
 {
     ui.setupUi(this);
 
+#if defined Q_OS_WIN
     QString strUpdatedStyleSheet;
     QString strStyleSheet = ui.tabWidget->styleSheet();
     QString matchStr = "QTabWidget:tab-bar{}";
@@ -36,6 +37,7 @@ ConnectWindow::ConnectWindow(QMenu *settingsMenu, QWidget *parent)
     strUpdatedStyleSheet += "QTabWidget:tab-bar{left: 100px; top: 10px;}";
     strUpdatedStyleSheet += strStyleSheet.right(strStyleSheet.length() - (ind + matchStr.length()));
     ui.tabWidget->setStyleSheet(strUpdatedStyleSheet);
+#endif
 
     ui.btnSettings->setMenu( settingsMenu );
 
