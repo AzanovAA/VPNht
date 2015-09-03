@@ -350,7 +350,7 @@ int sock_ = -1;
                 {
                     NSLog(@"Can't connect to openvpn socket after 1000 retries");
                     currentState_ = STATUS_DISCONNECTED;
-                    [eventDelegate_ onError: NO_OPENVPN_SOCKET];
+                    [eventDelegate_ onError: MAC_NO_OPENVPN_SOCKET];
                     return;
                 }
             }
@@ -397,11 +397,11 @@ int sock_ = -1;
             }
             else if ([strServerReply rangeOfString:@"PASSWORD:Verification Failed: 'Auth'"].location != NSNotFound)
             {
-                [eventDelegate_ onError: AUTH_ERROR];
+                [eventDelegate_ onError: MAC_AUTH_ERROR];
             }
             else if ([strServerReply rangeOfString:@"FATAL:Cannot allocate TUN/TAP dev dynamically"].location != NSNotFound)
             {
-                [eventDelegate_ onError: CANNOT_ALLOCATE_TUN_TAP];
+                [eventDelegate_ onError: MAC_CANNOT_ALLOCATE_TUN_TAP];
             }
             else if ([strServerReply rangeOfString:@">BYTECOUNT:"].location != NSNotFound)
             {

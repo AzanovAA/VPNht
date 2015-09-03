@@ -23,6 +23,7 @@ void WebRTCProtection::enable(bool bEnabled)
     if (bEnable_ == bEnabled)
         return;
 
+#if defined Q_OS_WIN
     if (bEnabled)
     {
         QString cmd1 = "netsh advfirewall firewall add rule name=\"No-WebRTC\" dir=out action=block protocol=UDP localport=3478,19302";
@@ -36,8 +37,6 @@ void WebRTCProtection::enable(bool bEnabled)
         bool b3 = g_openVPNConnection->executeRootCommand(cmd3, &exitCode3);
         bool b4 = g_openVPNConnection->executeRootCommand(cmd4, &exitCode4);
         qDebug() << "WebRTCProtection enabled : executed = " << (b1 && b2 && b3 && b4);
-
-        bEnable_ = true;
     }
     else
     {
@@ -52,8 +51,8 @@ void WebRTCProtection::enable(bool bEnabled)
         bool b3 = g_openVPNConnection->executeRootCommand(cmd3, &exitCode3);
         bool b4 = g_openVPNConnection->executeRootCommand(cmd4, &exitCode4);
         qDebug() << "WebRTCProtection disabled : executed = " << (b1 && b2 && b3 && b4);
-
-        bEnable_ = false;
     }
+#endif
+    bEnable_ = bEnabled;
 }
 

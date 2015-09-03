@@ -12,6 +12,8 @@ public:
 
 private:
     bool bEnable_;
+
+#if defined Q_OS_WIN
     QMap<QString, QString> oldDnsLeak_;
 
     void assignNewDns(const QString &newDns, QMap<QString, QString> &dns);
@@ -19,6 +21,7 @@ private:
     bool regSetDNS(const QString &lpszAdapterName, const QString &pDNS);
     bool notifyIPChange(const char *lpszAdapterName);
     bool flushDNS();
+#endif
 };
 
 #endif // DNSLEAKS_H

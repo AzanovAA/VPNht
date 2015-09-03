@@ -30,15 +30,15 @@ OpenVPNConnectorQt *g_openVPNConnectorQt = NULL;
 {
     if (error == AUTH_ERROR)
     {
-        g_openVPNConnectorQt->error(OpenVPNConnectorQt::AUTH_ERROR);
+        g_openVPNConnectorQt->error(AUTH_ERROR);
     }
     else if (error == NO_OPENVPN_SOCKET)
     {
-        g_openVPNConnectorQt->error(OpenVPNConnectorQt::NO_OPENVPN_SOCKET);
+        g_openVPNConnectorQt->error(NO_OPENVPN_SOCKET);
     }
     else if (error == CANNOT_ALLOCATE_TUN_TAP)
     {
-        g_openVPNConnectorQt->error(OpenVPNConnectorQt::CANNOT_ALLOCATE_TUN_TAP);
+        g_openVPNConnectorQt->error(CANNOT_ALLOCATE_TUN_TAP);
     }
 }
 - (void)onLog: (NSString *)logStr
@@ -65,7 +65,7 @@ OpenVPNConnectorQt::OpenVPNConnectorQt(QObject *parent) : QObject(parent)
     g_eventListener = [[EventListener alloc] init];
     [g_openVPNConnector setEventDelegate: g_eventListener];
 
-    qRegisterMetaType<OpenVPNConnectorQt::ERROR>();
+    qRegisterMetaType<OPENVPN_ERROR>();
 
     g_openVPNConnectorQt = this;
 }
@@ -82,7 +82,7 @@ bool OpenVPNConnectorQt::installHelper(const QString &label)
     return [g_openVPNConnector installHelper: (__bridge NSString *)label.toCFString()];
 }
 
-void OpenVPNConnectorQt::connect(const QString &configPath, const QString &username, const QString &password)
+void OpenVPNConnectorQt::connect(const QString &configPath, const QString &username, const QString &password, const QString &proxyUsername, const QString &proxyPassword)
 {
     g_openVPNConnector.configPath = (__bridge NSString *)configPath.toCFString();
     g_openVPNConnector.username = (__bridge NSString *)username.toCFString();
@@ -95,9 +95,11 @@ void OpenVPNConnectorQt::disconnect()
     [g_openVPNConnector disconnect];
 }
 
-void OpenVPNConnectorQt::executeRootCommand(const QString commandLine)
+bool OpenVPNConnectorQt::executeRootCommand(const QString commandLine, quint32 *exitCode)
 {
+    *exitCode = 0;
     [g_openVPNConnector executeRootCommand: (__bridge NSString *)commandLine.toCFString()];
+    return true;
 }
 
 void OpenVPNConnectorQt::emitConnected()
@@ -115,7 +117,7 @@ void OpenVPNConnectorQt::emitStateChanged(const QString &state)
     emit stateChanged(state);
 }
 
-void OpenVPNConnectorQt::emitError(OpenVPNConnectorQt::ERROR err)
+void OpenVPNConnectorQt::emitError(OPENVPN_ERROR err)
 {
     emit error(err);
 }

@@ -36,8 +36,6 @@ macx {
 
     QMAKE_OBJECTIVE_CFLAGS += -fobjc-arc
 
-    SOURCES += Mac/smartdns.cpp
-
     HEADERS += Mac/MacApplication.h \
         Mac/OpenVPNConnector.h \
         Mac/OpenVPNConnectorQt.h

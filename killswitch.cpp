@@ -37,7 +37,8 @@ bool KillSwitch::killInternet()
     bool b = g_openVPNConnection->executeRootCommand(cmd, &exitCode);
     qDebug() << cmd << " : executed = " << b << "; exitCode = " << exitCode;
 #elif defined Q_OS_MAC
-    g_openVPNConnection->executeRootCommand("route delete default");
+    quint32 exitCode;
+    g_openVPNConnection->executeRootCommand("route delete default", &exitCode);
 #endif
 
     bInternetKilled_ = true;
@@ -62,7 +63,8 @@ bool KillSwitch::restoreInternet()
         qDebug() << cmd << " : executed = " << b << "; exitCode = " << exitCode;
 #elif defined Q_OS_MAC
         // выполнить команду от рута route add default %data.host_%
-        g_openVPNConnection->executeRootCommand("route add default " + data.host_);
+        quint32 exitCode;
+        g_openVPNConnection->executeRootCommand("route add default " + data.host_, &exitCode);
 #endif
     }
 

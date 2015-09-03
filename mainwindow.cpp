@@ -158,8 +158,8 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 		{
             waitWindow_->hide();
             loginWindow_->show();
-			adjustSize();
-			setFixedSize(size());
+            adjustSize();
+            setFixedSize(size());
 		}
     }
     else
@@ -167,7 +167,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
         waitWindow_->hide();
         loginWindow_->show();
         adjustSize();
-		setFixedSize(size());
+        setFixedSize(size());
     }
 }
 
@@ -247,6 +247,7 @@ void MainWindow::onServerList()
     settingsWindow_->hide();
     serverListWindow_->setServers( getServers_->servers() );
     serverListWindow_->show();
+    serverListWindow_->adjustSize();
     adjustSize();
     setFixedSize(size());
 }

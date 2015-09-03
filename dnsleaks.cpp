@@ -1,9 +1,11 @@
 #include "dnsleaks.h"
-#include <qDebug>
-#include <windows.h>
-#include <Iphlpapi.h>
-#include "Windows/openvpnconnectorqt.h"
-#include <string>
+
+#if defined Q_OS_WIN
+    #include <qDebug>
+    #include <windows.h>
+    #include <Iphlpapi.h>
+    #include "Windows/openvpnconnectorqt.h"
+    #include <string>
 
 extern OpenVPNConnectorQt *g_openVPNConnection;
 
@@ -12,6 +14,7 @@ typedef struct _Adapt_Info
     char			AdapterName[MAX_ADAPTER_NAME_LENGTH + 4];
     std::string			NameSever;
 } AdaptInfo, *PADAPTINFO;
+#endif
 
 
 DnsLeaks::DnsLeaks() : bEnable_(false)
@@ -29,6 +32,7 @@ void DnsLeaks::enable(bool bEnabled)
     if (bEnable_ == bEnabled)
         return;
 
+#if defined Q_OS_WIN
     if (bEnabled)
     {
         qDebug() <<"------------------ DNS LEAK ON -------------";
@@ -44,9 +48,12 @@ void DnsLeaks::enable(bool bEnabled)
         oldDnsLeak_.clear();
         qDebug() <<"--------------------------------------------";
     }
+#endif
 
     bEnable_ = bEnabled;
 }
+
+#if defined Q_OS_WIN
 
 void DnsLeaks::assignNewDns(const QString &newDns, QMap<QString, QString> &dns)
 {
@@ -200,3 +207,4 @@ bool DnsLeaks::flushDNS()
     FreeLibrary(hDnsDll);
     return bResult;
 }
+#endif
