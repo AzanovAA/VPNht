@@ -85,7 +85,6 @@ private:
     GetMyIp *getMyVpnIp_;
 
     MakeOVPNFile ovpnFile_;
-    DownloadFile smartDNS_OVPNFile_;
 
     long prevBytesIn;
     long prevBytesOut;

@@ -10,7 +10,7 @@ public:
     MakeOVPNFile();
 
     //bool generate(const QString &protocolPort, const QString &server, const QString &cipher, ProxySetting &ps, bool bSmartDNS);
-    bool generate(const QString &ovpnData);
+    bool generate(const QString &ovpnData, ProxySetting &ps);
 
     QString path() { return path_; }
     bool makeSuccess() { return bMakeSuccess_; }

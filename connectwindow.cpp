@@ -22,13 +22,10 @@ ConnectWindow::ConnectWindow(QMenu *settingsMenu, QWidget *parent)
       pbRestoreGateway(0),
       killSwitch_(NULL),
       getMyVpnIp_(NULL),
-      smartDNS_OVPNFile_("https://vpn.ht/openvpn-config/hub?smartdns-only"),
       mode_(MODE_OPEN_VPN),
       logDialog_(NULL)
 {
     ui.setupUi(this);
-
-    smartDNS_OVPNFile_.start(QThread::LowPriority);
 
     QString strUpdatedStyleSheet;
     QString strStyleSheet = ui.tabWidget->styleSheet();
@@ -196,7 +193,7 @@ void ConnectWindow::onClickConnect()
         // delete log file
         ALog::Clear();
 		
-        ovpnFile_.generate(ovpnConfig.data());
+        ovpnFile_.generate(ovpnConfig.data(), ps);
         //ovpnFile_.generate(QString("%1 %2").arg(prot.name_).arg(availPorts.sPorts),
          //                     si.ip_, enc.name_, ps, ui.cbEnableSmartDNS->isChecked());
 
@@ -599,40 +596,68 @@ void ConnectWindow::showLog()
 
 void ConnectWindow::onClickSmartDns()
 {
-    smartDNS_OVPNFile_.wait();
-    if (!smartDNS_OVPNFile_.success())
-    {
-        QMessageBox::information(this, QApplication::applicationName(), "Can't download config file for SmartDNS. Please contact support.");
-        return;
-    }
-
     mode_ = MODE_SMART_DNS;
 
     if (state_ == STATE_DISCONNECTED)
     {
-        /*
-        ui.btnConnect->setStyleSheet("QPushButton { border-image :url(:/MainWindow/Images/btnOff.png); }");
-        ui.lbStatusCon->setText(QString("<b>Status:  </b><font color=\"green\">Connecting</font>"));*/
+        QSettings settings;
+        ProxySetting ps;
+        ps.used_ = settings.value("proxyIsOn").toBool();
+        if (ps.used_)
+        {
+            ps.server_ = settings.value("proxyUrl").toString();
+            ps.port_ = settings.value("proxyPort").toInt();
+            ps.user_ = settings.value("proxyUser").toString();
+            ps.password_ = settings.value("proxyPassword").toString();
+        }
+
+        ui.cbServer->setEnabled( false );
+        ui.tab->setEnabled(false);
+        setBarInConnectstatus(true);
+        QApplication::processEvents();
+
+        QString strUrl;
+        if (ps.used_)
+        {
+            strUrl = "https://vpn.ht/openvpn-config/hub/443?smartdns-only";
+        }
+        else
+        {
+            strUrl = "https://vpn.ht/openvpn-config/hub?smartdns-only";
+        }
+
+        DownloadFile ovpnConfig(strUrl);
+        ovpnConfig.start();
+        ovpnConfig.wait();
+
+        if (!ovpnConfig.success())
+        {
+            state_ = STATE_DISCONNECTED;
+            ui.cbServer->setEnabled( true );
+            ui.tab->setEnabled(true);
+            setBarInConnectstatus(false);
+            QMessageBox::information(this, QApplication::applicationName(), "Can't download config file. Please contact support.");
+            return;
+        }
 
         state_ = STATE_CONNECTING;
 
         // delete log file
         ALog::Clear();
 
-        ovpnFile_.generate(smartDNS_OVPNFile_.data());
+        ovpnFile_.generate(ovpnConfig.data(), ps);
 
 #if defined Q_OS_WIN
         QString ovpnPath = ovpnFile_.path();
 #elif defined Q_OS_MAC
         QString ovpnPath = "\'" + ovpnFile_.path() + "\'";
 #endif
-        g_openVPNConnection->connect(ovpnPath, userName_, password_, "", "");
+        g_openVPNConnection->connect(ovpnPath, userName_, password_, ps.user_, ps.password_);
 
-        mainWindow_->setTrayStatusConnecting();
-        ui.cbServer->setEnabled( false );
-
-        ui.tab->setEnabled(false);
-        setBarInConnectstatus(true);
+        //mainWindow_->setTrayStatusConnecting();
+        //ui.cbServer->setEnabled( false );
+        //ui.tab->setEnabled(false);
+        //setBarInConnectstatus(true);
     }
     else
     {

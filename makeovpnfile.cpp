@@ -80,13 +80,26 @@ MakeOVPNFile::MakeOVPNFile()
     return bMakeSuccess_;
 }*/
 
-bool MakeOVPNFile::generate(const QString &ovpnData)
+bool MakeOVPNFile::generate(const QString &ovpnData, ProxySetting &ps)
 {
     bMakeSuccess_ = false;
     if (tempFile_.open())
     {
         tempFile_.resize(0);
         tempFile_.write( ovpnData.toUtf8() );
+
+
+        // proxy
+        QString str = "\r\n";
+        if (ps.used_) {
+            str += "http-proxy " + ps.server_ + " " + QString::number(ps.port_);
+
+            if (!ps.user_.isEmpty())
+                str += " stdin basic";
+        }
+        str += "\r\n";
+        tempFile_.write(str.toLocal8Bit());
+
         tempFile_.close();
         bMakeSuccess_ = true;
     }

@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "VPNht"
-#define MyAppVersion "1.13"
+#define MyAppVersion "1.14"
 #define MyAppPublisher "VPNht"
 #define MyAppURL "https://vpn.ht/"
 
@@ -21,7 +21,7 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 ;OutputDir=C:\Work\VPNht\installer
-OutputBaseFilename=vpnht_1_13
+OutputBaseFilename=vpnht_1_14
 SetupIconFile=vpnht.ico
 UninstallDisplayIcon={app}\uninstall.ico
 Compression=lzma
