@@ -183,7 +183,7 @@ void MainWindow::onSignIn(QString login, QString password)
     connectWindow_->setAcountData(login, password);
     connectWindow_->show();
     adjustSize();
-    setFixedSize(size());
+    //setFixedSize(size());
 
     placeWindowToCenter();
 

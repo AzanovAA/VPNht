@@ -582,8 +582,11 @@ bool ConnectWindow::isConnected()
 
 void ConnectWindow::disconnectConnection()
 {
-    state_ = STATE_DISCONNECTING;
-    g_openVPNConnection->disconnect();
+    if (state_ != STATE_DISCONNECTED)
+    {
+        state_ = STATE_DISCONNECTING;
+        g_openVPNConnection->disconnect();
+    }
 }
 
 void ConnectWindow::showLog()
